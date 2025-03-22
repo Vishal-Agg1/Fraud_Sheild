@@ -4,16 +4,24 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const routes = require('./routes/Router');
 
-// Load environment variables
 dotenv.config();
 
-// Initialize express app
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Ensure database connection is established before handling requests
+(async () => {
+  try {
+    await connectDB();
+    console.log("Database Connected Successfully");
+  } catch (error) {
+    console.error("Database Connection Failed:", error);
+  }
+})();
 
 // Routes
 app.get('/', (req, res) => {
@@ -23,12 +31,5 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api', routes);
 
-
-
-// Start server
-const PORT = process.env.PORT || 5000;
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-  });
-}); 
+// Export the app for Vercel
+module.exports = app;

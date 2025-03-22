@@ -4,7 +4,7 @@ const transactionSchema = new mongoose.Schema({
     transaction_id: { type: String, required: true, unique: true },
     transaction_date: { type: Date, required: true },
     transaction_amount: { type: Number, required: true },
-    transaction_channel: { type: String, enum: ["web", "mobile", "other"], required: true },
+    transaction_channel: { type: String, required: true },
     transaction_payment_mode: { type: String, enum: ["Card", "UPI", "NEFT", "Other"], required: true },
     payment_gateway_bank: { type: String },
 

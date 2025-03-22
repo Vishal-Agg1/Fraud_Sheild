@@ -3,12 +3,18 @@ const Transaction = require("../models/Transaction");
 // Fetch all transactions
 const getAllTransactions = async (req, res) => {
     try {
-        const transactions = await Transaction.find().sort({ transaction_date: -1 });
-        
-        return res.status(200).json({
-            success: true,
-            transactions
-        });
+        const transactions = await Transaction.find();
+
+        const formattedTransactions = transactions.map((t) => ({
+            transaction_id: t.transaction_id,
+            payer: t.payer_email || t.payer_mobile, // Map payer
+            payee: t.payee_id, // Rename payee
+            amount: t.transaction_amount, // Rename amount
+            transaction_date: t.transaction_date,
+            fraud: t.is_fraud_predicted
+        }));
+
+        return res.status(200).json({ success: true, transactions: formattedTransactions });
     } catch (error) {
         return res.status(500).json({ success: false, message: "Server error", error });
     }
@@ -36,5 +42,8 @@ const getTransactionById = async (req, res) => {
         return res.status(500).json({ success: false, message: "Server error", error });
     }
 };
+
+
+
 
 module.exports = { getAllTransactions, getTransactionById };

@@ -16,6 +16,7 @@ const Dashboard = () => {
   const fetchTransactions = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/transactions");
+      console.log(response);
       const data = await response.json();
       if (data.success) {
         setTransactions(data.transactions);
@@ -79,7 +80,7 @@ const Dashboard = () => {
                 <td className="border p-2">{t.payer}</td>
                 <td className="border p-2">{t.payee}</td>
                 <td className="border p-2">${t.amount}</td>
-                <td className="border p-2">{t.transaction_date}</td>
+                <td className="border p-2">{new Date(t.transaction_date).toLocaleString()}</td>
                 <td className={`border p-2 ${t.fraud ? "text-red-500" : "text-green-500"}`}>{t.fraud ? "Yes" : "No"}</td>
               </tr>
             ))}
